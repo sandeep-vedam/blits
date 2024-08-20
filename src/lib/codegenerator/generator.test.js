@@ -714,7 +714,6 @@ test('Generate code for a template with attribute (object)', (assert) => {
   `
 
   const actual = generator.call(scope, templateObject)
-  console.log(actual.render.toString())
   assert.equal(
     normalize(actual.render.toString()),
     normalize(expectedRender),
@@ -884,81 +883,81 @@ test('Generate code for a template with custom components', (assert) => {
 
   const expectedRender = `
   function anonymous(parent, component, context, components, effect, getRaw) {
-      const elms = []
-      let componentType
-      const rootComponent = component
-      const elementConfig0 = {}
+    const elms = []
+    let componentType
+    const rootComponent = component
+    const elementConfig0 = {}
+    elms[0] = this.element({ parent: parent || 'root' }, component)
+    elms[0].populate(elementConfig0)
 
-      elms[0] = this.element({ parent: parent || 'root' }, component)
-      elms[0].populate(elementConfig0)
+    const cmp1 = (context.components && context.components['Poster']) || components['Poster']
+    parent = elms[0]
 
-      const cmp1 = (context.components && context.components['Poster']) || components['Poster']
-      parent = elms[0]
-      const elementConfig1 = {}
-
-      elms[1] = this.element({ parent: parent || 'root' }, component)
-      if(typeof cmp1 !== 'undefined') {
-        for(let key in cmp1.config.props) {
-          delete elementConfig1[cmp1.config.props[key]]
+    const elementConfig1 = {}
+    elms[1] = this.element({ parent: parent || 'root' }, component)
+    const skip1 = []
+    if (typeof cmp1 !== 'undefined') {
+        for (let key in cmp1.config.props) {
+            delete elementConfig1[cmp1.config.props[key]]
+            skip1.push(cmp1.config.props[key])
         }
-      }
-      elms[1].populate(elementConfig1)
-      parent = elms[1]
-      const props2 = {}
-      componentType = props2['is'] || 'Poster'
-      let component2
+    }
+    elms[1].populate(elementConfig1)
+    parent = elms[1]
 
-      if (typeof componentType === 'string') {
-          component2 = context.components && context.components[componentType] || components[componentType]
-          if (!component2) {
-              throw new Error('Component "Poster" not found')
-          }
-      } else if (typeof componentType === 'function' && componentType.name === 'factory') {
-          component2 = componentType
-      }
-
-      elms[2] = component2.call(null, { props: props2 }, elms[1], component)
-      if(elms[2][Symbol.for('slots')][0]) {
+    const props2 = {}
+    componentType = props2['is'] || 'Poster'
+    let component2
+    if (typeof componentType === 'string') {
+        component2 = context.components && context.components[componentType] || components[componentType]
+        if (!component2) {
+            throw new Error('Component "Poster" not found')
+        }
+    } else if (typeof componentType === 'function' && componentType.name === 'factory') {
+        component2 = componentType
+    }
+    elms[2] = component2.call(null, { props: props2 }, elms[1], component)
+    if (elms[2][Symbol.for('slots')][0]) {
         parent = elms[2][Symbol.for('slots')][0]
         component = elms[2]
-      } else {
+    } else {
         parent = elms[2][Symbol.for('children')][0]
-      }
+    }
 
-      const cmp3 = (context.components && context.components['Poster']) || components['Poster']
-      parent = elms[0]
-      const elementConfig3 = {}
-
-      elms[3] = this.element({ parent: parent || 'root' }, component)
-      if(typeof cmp3 !== 'undefined') {
-        for(let key in cmp3.config.props) {
-          delete elementConfig3[cmp3.config.props[key]]
+    const cmp3 = (context.components && context.components['Poster']) || components['Poster']
+    parent = elms[0]
+    const elementConfig3 = {}
+    elms[3] = this.element({ parent: parent || 'root' }, component)
+    const skip3 = []
+    if (typeof cmp3 !== 'undefined') {
+        for (let key in cmp3.config.props) {
+            delete elementConfig3[cmp3.config.props[key]]
+            skip3.push(cmp3.config.props[key])
         }
-      }
-      elms[3].populate(elementConfig3)
-      parent = elms[3]
-      const props4 = {}
-      componentType = props4['is'] || 'Poster'
-      let component4
-      if (typeof componentType === 'string') {
-          component4 = context.components && context.components[componentType] || components[componentType]
-          if (!component4) {
-              throw new Error('Component "Poster" not found')
-            }
-        } else if (typeof componentType === 'function' && componentType.name === 'factory') {
-            component4 = componentType
+    }
+    elms[3].populate(elementConfig3)
+    parent = elms[3]
+
+    const props4 = {}
+    componentType = props4['is'] || 'Poster'
+    let component4
+    if (typeof componentType === 'string') {
+        component4 = context.components && context.components[componentType] || components[componentType]
+        if (!component4) {
+            throw new Error('Component "Poster" not found')
         }
-
-        elms[4] = component4.call(null, { props: props4 }, elms[3], component)
-
-      if(elms[4][Symbol.for('slots')][0]) {
+    } else if (typeof componentType === 'function' && componentType.name === 'factory') {
+        component4 = componentType
+    }
+    elms[4] = component4.call(null, { props: props4 }, elms[3], component)
+    if (elms[4][Symbol.for('slots')][0]) {
         parent = elms[4][Symbol.for('slots')][0]
         component = elms[4]
-      } else {
+    } else {
         parent = elms[4][Symbol.for('children')][0]
-      }
+    }
 
-      return elms
+    return elms
   }
   `
 
@@ -1002,87 +1001,96 @@ test('Generate code for a template with an unregistered custom component', (asse
 
   const expectedRender = `
   function anonymous(parent, component, context, components, effect, getRaw) {
-      const elms = []
-      let componentType
-      const rootComponent = component
-      const elementConfig0 = {}
+    const elms = []
+    let componentType
+    const rootComponent = component
 
-      elms[0] = this.element({ parent: parent || 'root' }, component)
-      elms[0].populate(elementConfig0)
+    // Configuration for the first element
+    const elementConfig0 = {}
+    elms[0] = this.element({ parent: parent || 'root' }, component)
+    elms[0].populate(elementConfig0)
 
-      const cmp1 = (context.components && context.components['Poster']) || components['Poster']
-      parent = elms[0]
-      const elementConfig1 = {}
+    // Get 'Poster' component from context or components
+    const cmp1 = (context.components && context.components['Poster']) || components['Poster']
+    parent = elms[0]
 
-      elms[1] = this.element({ parent: parent || 'root' }, component)
-      if(typeof cmp1 !== 'undefined') {
-        for(let key in cmp1.config.props) {
-          delete elementConfig1[cmp1.config.props[key]]
+    const elementConfig1 = {}
+    elms[1] = this.element({ parent: parent || 'root' }, component)
+
+    const skip1 = []
+    if (typeof cmp1 !== 'undefined') {
+        for (let key in cmp1.config.props) {
+            delete elementConfig1[cmp1.config.props[key]]
+            skip1.push(cmp1.config.props[key])
         }
-      }
-      elms[1].populate(elementConfig1)
-      parent = elms[1]
+    }
+    elms[1].populate(elementConfig1)
+    parent = elms[1]
 
-      const props2 = {}
-      componentType = props2['is'] || 'Poster'
-      let component2
+    // Determine component type and create the second element
+    const props2 = {}
+    componentType = props2['is'] || 'Poster'
 
-      if(typeof componentType === 'string') {
-          component2 = context.components && context.components[componentType] || components[componentType]
-          if(!component2) {
-              throw new Error('Component "Poster" not found')
-          }
-      } else if(typeof componentType === 'function' && componentType.name === 'factory') {
-          component2 = componentType
-      }
+    let component2
+    if (typeof componentType === 'string') {
+        component2 = context.components && context.components[componentType] || components[componentType]
+        if (!component2) {
+            throw new Error('Component "Poster" not found')
+        }
+    } else if (typeof componentType === 'function' && componentType.name === 'factory') {
+        component2 = componentType
+    }
 
-      elms[2] = component2.call(null, { props: props2 }, elms[1], component)
-
-      if(elms[2][Symbol.for('slots')][0]) {
+    elms[2] = component2.call(null, { props: props2 }, elms[1], component)
+    if (elms[2][Symbol.for('slots')][0]) {
         parent = elms[2][Symbol.for('slots')][0]
         component = elms[2]
-      } else {
+    } else {
         parent = elms[2][Symbol.for('children')][0]
-      }
+    }
 
-      const cmp3 = (context.components && context.components['Poster2']) || components['Poster2']
-      parent = elms[0]
-      const elementConfig3 = {}
+    // Get 'Poster2' component from context or components
+    const cmp3 = (context.components && context.components['Poster2']) || components['Poster2']
+    parent = elms[0]
 
-      elms[3] = this.element({ parent: parent || 'root' }, component)
-      if(typeof cmp3 !== 'undefined') {
-        for(let key in cmp3.config.props) {
-          delete elementConfig3[cmp3.config.props[key]]
+    const elementConfig3 = {}
+    elms[3] = this.element({ parent: parent || 'root' }, component)
+
+    const skip3 = []
+    if (typeof cmp3 !== 'undefined') {
+        for (let key in cmp3.config.props) {
+            delete elementConfig3[cmp3.config.props[key]]
+            skip3.push(cmp3.config.props[key])
         }
-      }
-      elms[3].populate(elementConfig3)
-      parent = elms[3]
+    }
+    elms[3].populate(elementConfig3)
+    parent = elms[3]
 
-      const props4 = {}
-      componentType = props4['is'] || 'Poster2'
-      let component4
+    // Determine component type and create the fourth element
+    const props4 = {}
+    componentType = props4['is'] || 'Poster2'
 
-      if(typeof componentType === 'string') {
-          component4 = context.components && context.components[componentType] || components[componentType]
-          if(!component4) {
-              throw new Error('Component "Poster2" not found')
-          }
-      } else if(typeof componentType === 'function' && componentType.name === 'factory') {
-          component4 = componentType
-      }
+    let component4
+    if (typeof componentType === 'string') {
+        component4 = context.components && context.components[componentType] || components[componentType]
+        if (!component4) {
+            throw new Error('Component "Poster2" not found')
+        }
+    } else if (typeof componentType === 'function' && componentType.name === 'factory') {
+        component4 = componentType
+    }
 
-      elms[4] = component4.call(null, { props: props4 }, elms[3], component)
-
-      if(elms[4][Symbol.for('slots')][0]) {
+    elms[4] = component4.call(null, { props: props4 }, elms[3], component)
+    if (elms[4][Symbol.for('slots')][0]) {
         parent = elms[4][Symbol.for('slots')][0]
         component = elms[4]
-      } else {
+    } else {
         parent = elms[4][Symbol.for('children')][0]
-      }
+    }
 
-      return elms
-  }
-  `
+        return elms
+    }
+    `
 
   const actual = generator.call(scope, templateObject)
 
@@ -1126,91 +1134,98 @@ test('Generate code for a template with custom components with arguments', (asse
   }
 
   const expectedRender = `
-  function anonymous(parent, component, context, components, effect, getRaw) {
-      const elms = []
-      let componentType
-      const rootComponent = component
-      const elementConfig0 = {}
+   function anonymous(parent, component, context, components, effect, getRaw) {
+    const elms = []
+    let componentType
+    const rootComponent = component
+    const elementConfig0 = {}
 
-      elms[0] = this.element({ parent: parent || 'root' }, component)
-      elms[0].populate(elementConfig0)
+    elms[0] = this.element({ parent: parent || 'root' }, component)
+    elms[0].populate(elementConfig0)
 
-      const cmp1 = (context.components && context.components['Poster']) || components['Poster']
-      parent = elms[0]
-      const elementConfig1 = {}
+    const cmp1 = (context.components && context.components['Poster']) || components['Poster']
+    parent = elms[0]
 
-      elms[1] = this.element({ parent: parent || 'root' }, component)
-      elementConfig1['x'] = 10
-      if(typeof cmp1 !== 'undefined') {
-        for(let key in cmp1.config.props) {
-          delete elementConfig1[cmp1.config.props[key]]
+    const elementConfig1 = {}
+    elms[1] = this.element({ parent: parent || 'root' }, component)
+    elementConfig1['x'] = 10
+
+    const skip1 = []
+    if (typeof cmp1 !== 'undefined') {
+        for (let key in cmp1.config.props) {
+            delete elementConfig1[cmp1.config.props[key]]
+            skip1.push(cmp1.config.props[key])
         }
-      }
-      elms[1].populate(elementConfig1)
-      parent = elms[1]
+    }
+    elms[1].populate(elementConfig1)
+    parent = elms[1]
 
-      const props2 = {}
-      props2['x'] = 10
-      componentType = props2['is'] || 'Poster'
-      let component2
-      if (typeof componentType === 'string') {
-          component2 = context.components && context.components[componentType] || components[componentType]
-          if (!component2) {
-              throw new Error('Component "Poster" not found')
-          }
-      } else if (typeof componentType === 'function' && componentType.name === 'factory') {
-          component2 = componentType
-      }
-      elms[2] = component2.call(null, { props: props2 }, elms[1], component)
-      if(elms[2][Symbol.for('slots')][0]) {
+    const props2 = {}
+    props2['x'] = 10
+    componentType = props2['is'] || 'Poster'
+
+    let component2
+    if (typeof componentType === 'string') {
+        component2 = context.components && context.components[componentType] || components[componentType]
+        if (!component2) {
+            throw new Error('Component "Poster" not found')
+        }
+    } else if (typeof componentType === 'function' && componentType.name === 'factory') {
+        component2 = componentType
+    }
+
+    elms[2] = component2.call(null, { props: props2 }, elms[1], component)
+    if (elms[2][Symbol.for('slots')][0]) {
         parent = elms[2][Symbol.for('slots')][0]
         component = elms[2]
-      } else {
+    } else {
         parent = elms[2][Symbol.for('children')][0]
-      }
+    }
 
-      const cmp3 = (context.components && context.components['Poster']) || components['Poster']
-      parent = elms[0]
-      const elementConfig3 = {}
+    const cmp3 = (context.components && context.components['Poster']) || components['Poster']
+    parent = elms[0]
 
-      elms[3] = this.element({ parent: parent || 'root' }, component)
-      elementConfig3['x'] = 100
-      elementConfig3['img'] = component.img
-      if(typeof cmp3 !== 'undefined') {
-        for(let key in cmp3.config.props) {
-          delete elementConfig3[cmp3.config.props[key]]
+    const elementConfig3 = {}
+    elms[3] = this.element({ parent: parent || 'root' }, component)
+    elementConfig3['x'] = 100
+    elementConfig3['img'] = component.img
+
+    const skip3 = []
+    if (typeof cmp3 !== 'undefined') {
+        for (let key in cmp3.config.props) {
+            delete elementConfig3[cmp3.config.props[key]]
+            skip3.push(cmp3.config.props[key])
         }
-      }
-      elms[3].populate(elementConfig3)
-      parent = elms[3]
+    }
+    elms[3].populate(elementConfig3)
+    parent = elms[3]
 
-      const props4 = {}
-      props4['x'] = 100
-      props4['img'] = component.img
-      componentType = props4['is'] || 'Poster'
-      let component4
+    const props4 = {}
+    props4['x'] = 100
+    props4['img'] = component.img
+    componentType = props4['is'] || 'Poster'
 
-      if (typeof componentType === 'string') {
-          component4=context.components && context.components[componentType] || components[componentType]
-          if (!component4) {
-              throw new Error('Component "Poster" not found')
-          }
-      } else if (typeof componentType === 'function' && componentType.name === 'factory') {
-          component4 = componentType
-      }
+    let component4
+    if (typeof componentType === 'string') {
+        component4 = context.components && context.components[componentType] || components[componentType]
+        if (!component4) {
+            throw new Error('Component "Poster" not found')
+        }
+    } else if (typeof componentType === 'function' && componentType.name === 'factory') {
+        component4 = componentType
+    }
 
-      elms[4] = component4.call(null, { props: props4 }, elms[3], component)
-
-      if(elms[4][Symbol.for('slots')][0]) {
+    elms[4] = component4.call(null, { props: props4 }, elms[3], component)
+    if (elms[4][Symbol.for('slots')][0]) {
         parent = elms[4][Symbol.for('slots')][0]
         component = elms[4]
-      } else {
+    } else {
         parent = elms[4][Symbol.for('children')][0]
-      }
+    }
 
-      return elms
-  }
-  `
+    return elms
+    }
+   `
 
   const actual = generator.call(scope, templateObject)
 
@@ -1256,98 +1271,102 @@ test('Generate code for a template with custom components with reactive props', 
 
   const expectedRender = `
   function anonymous(parent, component, context, components, effect, getRaw) {
-      const elms = []
-      let componentType
-      const rootComponent = component
-      const elementConfig0 = {}
+    const elms = []
+    let componentType
+    const rootComponent = component
+    const elementConfig0 = {}
 
-      elms[0] = this.element({ parent: parent || 'root' }, component)
-      elms[0].populate(elementConfig0)
+    elms[0] = this.element({ parent: parent || 'root' }, component)
+    elms[0].populate(elementConfig0)
 
-      const cmp1 = (context.components && context.components['Poster']) || components['Poster']
-      parent = elms[0]
-      const elementConfig1 = {}
+    const cmp1 = (context.components && context.components['Poster']) || components['Poster']
+    parent = elms[0]
 
-      elms[1] = this.element({ parent: parent || 'root' }, component)
-      elementConfig1['x'] = 10
-      elementConfig1['img'] = component.image
-      if(typeof cmp1 !== 'undefined') {
-        for(let key in cmp1.config.props) {
-          delete elementConfig1[cmp1.config.props[key]]
+    const elementConfig1 = {}
+    elms[1] = this.element({ parent: parent || 'root' }, component)
+    elementConfig1['x'] = 10
+    elementConfig1['img'] = component.image
+
+    const skip1 = []
+    if (typeof cmp1 !== 'undefined') {
+        for (let key in cmp1.config.props) {
+            delete elementConfig1[cmp1.config.props[key]]
+            skip1.push(cmp1.config.props[key])
         }
-      }
-      elms[1].populate(elementConfig1)
-      parent = elms[1]
+    }
+    elms[1].populate(elementConfig1)
+    parent = elms[1]
 
-      const props2 = {}
-      props2['x'] = 10
-      props2['img'] = component.image
-      componentType = props2['is'] || 'Poster'
-      let component2
+    const props2 = {}
+    props2['x'] = 10
+    props2['img'] = component.image
+    componentType = props2['is'] || 'Poster'
 
-      if (typeof componentType === 'string') {
-          component2 = context.components && context.components[componentType] || components[componentType]
-          if (!component2) {
-              throw new Error('Component "Poster" not found')
-          }
-      } else if (typeof componentType === 'function' && componentType.name === 'factory') {
-          component2 = componentType
-      }
-
-      elms[2] = component2.call(null, { props: props2 }, elms[1], component)
-
-      if(elms[2][Symbol.for('slots')][0]) {
+    let component2
+    if (typeof componentType === 'string') {
+        component2 = context.components && context.components[componentType] || components[componentType]
+        if (!component2) {
+            throw new Error('Component "Poster" not found')
+        }
+    } else if (typeof componentType === 'function' && componentType.name === 'factory') {
+        component2 = componentType
+    }
+    elms[2] = component2.call(null, { props: props2 }, elms[1], component)
+    if (elms[2][Symbol.for('slots')][0]) {
         parent = elms[2][Symbol.for('slots')][0]
         component = elms[2]
-      } else {
+    } else {
         parent = elms[2][Symbol.for('children')][0]
-      }
+    }
 
-      const cmp3 = (context.components && context.components['Poster']) || components['Poster']
-      parent = elms[0]
-      const elementConfig3 = {}
+    const cmp3 = (context.components && context.components['Poster']) || components['Poster']
+    parent = elms[0]
 
-      elms[3] = this.element({ parent: parent || 'root' }, component)
-      elementConfig3['x'] = 100
-      elementConfig3['img'] = component.image
-      if(typeof cmp3 !== 'undefined') {
-        for(let key in cmp3.config.props) {
-          delete elementConfig3[cmp3.config.props[key]]
+    const elementConfig3 = {}
+    elms[3] = this.element({ parent: parent || 'root' }, component)
+    elementConfig3['x'] = 100
+    elementConfig3['img'] = component.image
+
+    const skip3 = []
+    if (typeof cmp3 !== 'undefined') {
+        for (let key in cmp3.config.props) {
+            delete elementConfig3[cmp3.config.props[key]]
+            skip3.push(cmp3.config.props[key])
         }
-      }
-      elms[3].populate(elementConfig3)
-      parent = elms[3]
+    }
+    elms[3].populate(elementConfig3)
+    parent = elms[3]
 
-      const props4 = {}
-      props4['x'] = 100
-      props4['img'] = component.image
-      componentType = props4['is'] || 'Poster'
-      let component4
+    const props4 = {}
+    props4['x'] = 100
+    props4['img'] = component.image
+    componentType = props4['is'] || 'Poster'
 
-      if (typeof componentType === 'string') {
-          component4 = context.components && context.components[componentType] || components[componentType]
-          if (!component4) {
-              throw new Error('Component "Poster" not found')
-          }
-      } else if (typeof componentType === 'function' && componentType.name === 'factory') {
-          component4 = componentType
-      }
-
-      elms[4] = component4.call(null, { props: props4 }, elms[3], component)
-      if(elms[4][Symbol.for('slots')][0]) {
+    let component4
+    if (typeof componentType === 'string') {
+        component4 = context.components && context.components[componentType] || components[componentType]
+        if (!component4) {
+            throw new Error('Component "Poster" not found')
+        }
+    } else if (typeof componentType === 'function' && componentType.name === 'factory') {
+        component4 = componentType
+    }
+    elms[4] = component4.call(null, { props: props4 }, elms[3], component)
+    if (elms[4][Symbol.for('slots')][0]) {
         parent = elms[4][Symbol.for('slots')][0]
         component = elms[4]
-      } else {
+    } else {
         parent = elms[4][Symbol.for('children')][0]
-      }
+    }
 
-      return elms
+    return elms
   }
   `
 
   const expectedEffect1 = `
-  function anonymous(component,elms,context,components,rootComponent,effect) {
-    elms[1].set('img', component.image)
+  function anonymous(component, elms, context, components, rootComponent, effect) {
+    if (typeof skip1 === 'undefined' || skip1.indexOf('img') === -1)
+        elms[1].set('img', component.image)
   }
   `
 
@@ -1358,8 +1377,9 @@ test('Generate code for a template with custom components with reactive props', 
   `
 
   const expectedEffect3 = `
-  function anonymous(component,elms,context,components,rootComponent,effect) {
-    elms[3].set('img', component.image)
+  function anonymous(component, elms, context, components, rootComponent, effect) {
+    if (typeof skip3 === 'undefined' || skip3.indexOf('img') === -1)
+        elms[3].set('img', component.image)
   }
   `
 
@@ -1437,6 +1457,7 @@ test('Generate code for a template with a transition attributes', (assert) => {
   `
 
   const actual = generator.call(scope, templateObject)
+  console.log('Actual result is-----------------------------', actual)
 
   assert.equal(
     normalize(actual.render.toString()),
@@ -2456,7 +2477,7 @@ test('Generate code for a template with double $$ (i.e. referencing a Blits plug
   `
 
   const actual = generator.call(scope, templateObject)
-
+  console.log('Actual render is', actual)
   assert.equal(
     normalize(actual.render.toString()),
     normalize(expectedRender),
